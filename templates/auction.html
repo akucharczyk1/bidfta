@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ auction_title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-red: #E63946;
+            --color-light-green: #F1FAEE;
+            --color-light-blue: #A8DADC;
+            --color-blue: #457B9D;
+            --color-dark-blue: #1D3557;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--color-light-green);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .heading {
+            font-size: 3em;
+            font-weight: bold;
+            color: var(--color-dark-blue);
+            margin: 20px 0;
+            position: relative;
+            text-align: center;
+        }
+        .heading::after {
+            content: "";
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: var(--color-dark-blue);
+            margin: 10px auto;
+            border-radius: 2px;
+        }
+        .filter-form {
+            background-color: var(--color-light-blue);
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .filter-form form {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .filter-form div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .filter-form label {
+            font-size: 0.9em;
+            color: var(--color-dark-blue);
+            margin-bottom: 5px;
+        }
+        .filter-form input,
+        .filter-form select {
+            padding: 5px;
+            border: 1px solid var(--color-blue);
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+        .filter-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .filter-form button {
+            background-color: var(--color-blue);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.9em;
+            width: 150px;
+            text-align: center;
+        }
+        .filter-form button:hover {
+            background-color: var(--color-dark-blue);
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 20px;
+            justify-content: center;
+        }
+        .auction-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            width: 200px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .auction-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+        .condition-banner {
+            background-color: var(--color-blue);
+            color: white;
+            padding: 5px;
+            font-weight: bold;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 10px;
+        }
+        .auction-card h2 {
+            font-size: 0.9em;
+            color: var(--color-dark-blue);
+            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .auction-card p {
+            color: var(--color-blue);
+            margin: 5px 0;
+            font-size: 0.8em;
+        }
+        .view-product {
+            background-color: var(--color-blue);
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 10px;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+        }
+        .view-product:hover {
+            background-color: var(--color-dark-blue);
+        }
+        .back-to-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: var(--color-blue);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .back-to-home:hover {
+            background-color: var(--color-dark-blue);
+        }
+    </style>
+</head>
+<body>
+    <a href="{{ url_for('home') }}" class="back-to-home">← Back to Home</a>
+    <div class="heading">{{ auction_title }}</div>
+    <div class="filter-form">
+        <form action="{{ url_for('auction_detail', auction_id=auction_id) }}" method="get">
+            <div>
+                <label for="condition">Condition:</label>
+                <select name="condition" id="condition">
+                    <option value="all" {% if request.args.get('condition') == 'all' %}selected{% endif %}>All</option>
+                    <option value="Brand New" {% if request.args.get('condition') == 'Brand New' %}selected{% endif %}>Brand New</option>
+                    <option value="Good Condition" {% if request.args.get('condition') == 'Good Condition' %}selected{% endif %}>Good Condition</option>
+                    <option value="As Is" {% if request.args.get('condition') == 'As Is' %}selected{% endif %}>As Is</option>
+                </select>
+            </div>
+            <div>
+                <label for="msrp_min">Min MSRP:</label>
+                <input type="number" name="msrp_min" id="msrp_min" value="{{ request.args.get('msrp_min', '') }}">
+            </div>
+            <div>
+                <label for="bidders_max">Max Bidders:</label>
+                <input type="number" name="bidders_max" id="bidders_max" value="{{ request.args.get('bidders_max', '') }}">
+            </div>
+            <div class="filter-buttons">
+                <button type="submit">Apply Filters</button>
+                <button type="button" onclick="window.location.href='{{ url_for('ideal_buys', auction_id=auction_id) }}'">Find Ideal Buys</button>
+            </div>
+        </form>
+    </div>
+    <div class="container">
+        {% for item in auction_details %}
+        <div class="auction-card">
+            <div class="condition-banner">{{ item.condition }}</div>
+            <img src="{{ item.pictures[0] }}" alt="{{ item.title }}" style="max-width: 100%; max-height: 100px; object-fit: cover;">
+            <h2>{{ item.title }}</h2>
+            <p>Bidders: {{ item.bidsCount }}</p>
+            <p>MSRP: ${{ item.msrp }}</p>
+            <p>Current Bid: ${{ item.currentBid }}</p>
+            <p>Price after fees: {{ item.currentBid | calculate_price_after_fees }}</p>
+            <a href="https://www.bidfta.com/{{ auction_id }}/item-detail/{{ item.id }}" target="_blank" class="view-product">View Product</a>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
